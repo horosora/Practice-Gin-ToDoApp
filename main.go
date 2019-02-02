@@ -14,9 +14,12 @@ type ToDo struct {
 
 func main() {
 	router := gin.Default()
+	router.LoadHTMLGlob("templates/*")
 
 	router.GET("/", func(context *gin.Context) {
-		context.String(http.StatusOK, "Hello world")
+		context.HTML(http.StatusOK, "index.tmpl", gin.H{
+			"msg": "Hello",
+		})
 	})
 
 	router.Run(":8080")
