@@ -38,6 +38,14 @@ func getAll() []ToDo {
 	return todo
 }
 
+func rmAll() {
+	db, err := gorm.Open("sqlite3", "./todo.db")
+	if err != nil {
+		panic(err)
+	}
+	db.Delete(ToDo{})
+}
+
 func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
@@ -51,6 +59,11 @@ func main() {
 
 	router.POST("/add", func(context *gin.Context) {
 		addToDo(context.PostForm("contents"))
+		context.Redirect(http.StatusFound, "/")
+	})
+
+	router.GET("/rm", func(context *gin.Context) {
+		rmAll()
 		context.Redirect(http.StatusFound, "/")
 	})
 
