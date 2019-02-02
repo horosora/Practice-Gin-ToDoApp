@@ -58,7 +58,10 @@ func main() {
 	})
 
 	router.POST("/add", func(context *gin.Context) {
-		addToDo(context.PostForm("contents"))
+		content := context.PostForm("contents")
+		if content != "" {
+			addToDo(content)
+		}
 		context.Redirect(http.StatusFound, "/")
 	})
 
