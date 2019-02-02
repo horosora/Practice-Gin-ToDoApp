@@ -5,6 +5,14 @@
         <title>ToDoApp</title>
     </head>
     <body>
-        <p>{{ .msg }}</p>
+        <form method="post" action="/add">
+            <p><textarea name="contents" cols="40" rows="5"></textarea></p>
+            <p><input type="submit" value="add"></p>
+        </form>
+        <ul>
+            {{ range .todo }}
+                <li>{{ .Contents }}</li>
+            {{ end }}
+        </ul>
     </body>
 </html>

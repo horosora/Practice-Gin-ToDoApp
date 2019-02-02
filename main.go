@@ -12,14 +12,46 @@ type ToDo struct {
 	Contents string
 }
 
+func DBInit() {
+	db, err := gorm.Open("sqlite3", "./todo.db")
+	if err != nil {
+		panic(err)
+	}
+	db.AutoMigrate(&ToDo{})
+}
+
+func addToDo(contents string) {
+	db, err := gorm.Open("sqlite3", "./todo.db")
+	if err != nil {
+		panic(err)
+	}
+	db.Create(&ToDo{Contents: contents})
+}
+
+func getAll() []ToDo {
+	db, err := gorm.Open("sqlite3", "./todo.db")
+	if err != nil {
+		panic(err)
+	}
+	var todo []ToDo
+	db.Find(&todo)
+	return todo
+}
+
 func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
 
+	DBInit()
+
 	router.GET("/", func(context *gin.Context) {
-		context.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"msg": "Hello",
-		})
+		todo := getAll()
+		context.HTML(http.StatusOK, "index.tmpl", gin.H{"todo": todo})
+	})
+
+	router.POST("/add", func(context *gin.Context) {
+		addToDo(context.PostForm("contents"))
+		context.Redirect(http.StatusFound, "/")
 	})
 
 	router.Run(":8080")
