@@ -9,6 +9,11 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+type ToDo struct {
+	Id int
+	Content string
+}
+
 func DBInit() {
 	db ,err := sql.Open("sqlite3", "./todo.db")
 	if err != nil {
@@ -36,7 +41,7 @@ func DBInit() {
 	rows.Close()
 
 	if makeDBTableFlag {
-		_, err = db.Exec("CREATE TABLE todo(contents TEXT)")
+		_, err = db.Exec("CREATE TABLE todo(id INTEGER PRIMARY KEY , contents TEXT NOT NULL)")
 		if err != nil {
 			panic(err)
 		}
@@ -56,31 +61,32 @@ func addToDo(contents string) {
 	}
 }
 
-func getAll() []string {
+func getAll() []ToDo {
 	db ,err := sql.Open("sqlite3", "./todo.db")
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
 
-	rows, err := db.Query("SELECT contents FROM todo")
+	rows, err := db.Query("SELECT * FROM todo")
 	if err != nil {
 		log.Println(err)
 	}
 
-	var contents []string
+	var todos []ToDo
 	for rows.Next() {
+		var id int
 		var content string
-		err := rows.Scan(&content)
-		if err != nil {
-			log.Println(err)
-		}
-		contents = append(contents, content)
+		var todo ToDo
+		rows.Scan(&id, &content)
+		todo.Id = id
+		todo.Content = content
+		todos = append(todos, todo)
 	}
 
 	rows.Close()
 
-	return contents
+	return todos
 }
 
 func rmAll() {

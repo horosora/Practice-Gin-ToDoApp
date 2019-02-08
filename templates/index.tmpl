@@ -11,7 +11,7 @@
         </form>
         <ul>
             {{ range .todo }}
-                <li>{{ . }}</li>
+                <li>{{ .Id }} : {{ .Content }}</li>
             {{ end }}
         </ul>
         <form method="get" action="/rm">
