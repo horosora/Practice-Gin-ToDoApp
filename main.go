@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
@@ -61,7 +62,7 @@ func addToDo(contents string) {
 	}
 }
 
-func getAll() []ToDo {
+func getAllToDo() []ToDo {
 	db ,err := sql.Open("sqlite3", "./todo.db")
 	if err != nil {
 		panic(err)
@@ -89,14 +90,14 @@ func getAll() []ToDo {
 	return todos
 }
 
-func rmAll() {
+func rmToDo(id int) {
 	db ,err := sql.Open("sqlite3", "./todo.db")
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
 
-	_, err = db.Exec("DELETE FROM todo")
+	_, err = db.Exec("DELETE FROM todo WHERE id = ?", id)
 	if err != nil {
 		log.Println(err)
 	}
@@ -109,7 +110,7 @@ func main() {
 	DBInit()
 
 	router.GET("/", func(context *gin.Context) {
-		todo := getAll()
+		todo := getAllToDo()
 		context.HTML(http.StatusOK, "index.tmpl", gin.H{"todo": todo})
 	})
 
@@ -122,7 +123,8 @@ func main() {
 	})
 
 	router.GET("/rm", func(context *gin.Context) {
-		rmAll()
+		id, _ := strconv.Atoi(context.Query("id"))
+		rmToDo(id)
 		context.Redirect(http.StatusFound, "/")
 	})
 

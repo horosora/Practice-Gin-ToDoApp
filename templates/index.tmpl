@@ -9,12 +9,10 @@
             <p><textarea name="contents" cols="40" rows="5"></textarea></p>
             <p><input type="submit" value="add"></p>
         </form>
-        <ul>
-            {{ range .todo }}
-                <li>{{ .Id }} : {{ .Content }}</li>
-            {{ end }}
-        </ul>
         <form method="get" action="/rm">
+            {{ range .todo }}
+                <p><input type="checkbox" name="id" value="{{ .Id }}">{{ .Content }}</p>
+            {{ end }}
             <p><input type="submit" value="remove"></p>
         </form>
     </body>
