@@ -2,12 +2,17 @@ package main
 
 import (
 	"database/sql"
-	"log"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
+	"log"
+	"net/http"
+	"strconv"
 )
+
+type ToDo struct {
+	Id int
+	Content string
+}
 
 func DBInit() {
 	db ,err := sql.Open("sqlite3", "./todo.db")
@@ -36,7 +41,7 @@ func DBInit() {
 	rows.Close()
 
 	if makeDBTableFlag {
-		_, err = db.Exec("CREATE TABLE todo(contents TEXT)")
+		_, err = db.Exec("CREATE TABLE todo(id INTEGER PRIMARY KEY , contents TEXT NOT NULL)")
 		if err != nil {
 			panic(err)
 		}
@@ -56,43 +61,47 @@ func addToDo(contents string) {
 	}
 }
 
-func getAll() []string {
+func getAllToDo() []ToDo {
 	db ,err := sql.Open("sqlite3", "./todo.db")
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
 
-	rows, err := db.Query("SELECT contents FROM todo")
+	rows, err := db.Query("SELECT * FROM todo")
 	if err != nil {
 		log.Println(err)
 	}
 
-	var contents []string
+	var todos []ToDo
 	for rows.Next() {
+		var id int
 		var content string
-		err := rows.Scan(&content)
-		if err != nil {
-			log.Println(err)
-		}
-		contents = append(contents, content)
+		var todo ToDo
+		rows.Scan(&id, &content)
+		todo.Id = id
+		todo.Content = content
+		todos = append(todos, todo)
 	}
 
 	rows.Close()
 
-	return contents
+	return todos
 }
 
-func rmAll() {
+func rmToDo(strId []string) {
 	db ,err := sql.Open("sqlite3", "./todo.db")
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
 
-	_, err = db.Exec("DELETE FROM todo")
-	if err != nil {
-		log.Println(err)
+	for i := 0; i < len(strId); i++ {
+		id, _ := strconv.Atoi(strId[i])
+		_, err = db.Exec("DELETE FROM todo WHERE id = ?", id)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 }
 
@@ -103,7 +112,7 @@ func main() {
 	DBInit()
 
 	router.GET("/", func(context *gin.Context) {
-		todo := getAll()
+		todo := getAllToDo()
 		context.HTML(http.StatusOK, "index.tmpl", gin.H{"todo": todo})
 	})
 
@@ -115,8 +124,8 @@ func main() {
 		context.Redirect(http.StatusFound, "/")
 	})
 
-	router.GET("/rm", func(context *gin.Context) {
-		rmAll()
+	router.POST("/rm", func(context *gin.Context) {
+		rmToDo(context.PostFormArray("id"))
 		context.Redirect(http.StatusFound, "/")
 	})
 

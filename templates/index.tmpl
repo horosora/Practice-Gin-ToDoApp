@@ -6,15 +6,15 @@
     </head>
     <body>
         <form method="post" action="/add">
-            <p><textarea name="contents" cols="40" rows="5"></textarea></p>
-            <p><input type="submit" value="add"></p>
+            <p>
+                <input type="text" name="contents" size="50"></textarea>
+                <input type="submit" value="add">
+            </p>
         </form>
-        <ul>
+        <form method="post" action="/rm">
             {{ range .todo }}
-                <li>{{ . }}</li>
+                <p><input type="checkbox" name="id" value="{{ .Id }}">{{ .Content }}</p>
             {{ end }}
-        </ul>
-        <form method="get" action="/rm">
             <p><input type="submit" value="remove"></p>
         </form>
     </body>
