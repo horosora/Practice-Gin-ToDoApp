@@ -9,7 +9,7 @@
             <p><textarea name="contents" cols="40" rows="5"></textarea></p>
             <p><input type="submit" value="add"></p>
         </form>
-        <form method="get" action="/rm">
+        <form method="post" action="/rm">
             {{ range .todo }}
                 <p><input type="checkbox" name="id" value="{{ .Id }}">{{ .Content }}</p>
             {{ end }}
