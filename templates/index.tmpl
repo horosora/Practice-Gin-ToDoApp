@@ -13,7 +13,7 @@
         </form>
         <form method="post" action="/rm">
             {{ range .todo }}
-                <p><input type="checkbox" name="id" value="{{ .Id }}">{{ .Content }}</p>
+                <p><input type="checkbox" name="id" value="{{ .ID }}">{{ .Content }}</p>
             {{ end }}
             <p><input type="submit" value="remove"></p>
         </form>
