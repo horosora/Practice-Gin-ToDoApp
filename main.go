@@ -2,20 +2,21 @@ package main
 
 import (
 	"database/sql"
-	"github.com/gin-gonic/gin"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type ToDo struct {
-	Id int
+	ID      int
 	Content string
 }
 
 func DBInit() {
-	db ,err := sql.Open("sqlite3", "./todo.db")
+	db, err := sql.Open("sqlite3", "./todo.db")
 	if err != nil {
 		panic(err)
 	}
@@ -33,7 +34,7 @@ func DBInit() {
 		if err != nil {
 			panic(err)
 		}
-		if tableName  == "todo" {
+		if tableName == "todo" {
 			makeDBTableFlag = false
 		}
 	}
@@ -49,7 +50,7 @@ func DBInit() {
 }
 
 func addToDo(contents string) {
-	db ,err := sql.Open("sqlite3", "./todo.db")
+	db, err := sql.Open("sqlite3", "./todo.db")
 	if err != nil {
 		panic(err)
 	}
@@ -62,7 +63,7 @@ func addToDo(contents string) {
 }
 
 func getAllToDo() []ToDo {
-	db ,err := sql.Open("sqlite3", "./todo.db")
+	db, err := sql.Open("sqlite3", "./todo.db")
 	if err != nil {
 		panic(err)
 	}
@@ -79,7 +80,7 @@ func getAllToDo() []ToDo {
 		var content string
 		var todo ToDo
 		rows.Scan(&id, &content)
-		todo.Id = id
+		todo.ID = id
 		todo.Content = content
 		todos = append(todos, todo)
 	}
@@ -89,15 +90,15 @@ func getAllToDo() []ToDo {
 	return todos
 }
 
-func rmToDo(strId []string) {
-	db ,err := sql.Open("sqlite3", "./todo.db")
+func rmToDo(strID []string) {
+	db, err := sql.Open("sqlite3", "./todo.db")
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
 
-	for i := 0; i < len(strId); i++ {
-		id, _ := strconv.Atoi(strId[i])
+	for i := 0; i < len(strID); i++ {
+		id, _ := strconv.Atoi(strID[i])
 		_, err = db.Exec("DELETE FROM todo WHERE id = ?", id)
 		if err != nil {
 			log.Println(err)
