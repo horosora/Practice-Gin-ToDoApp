@@ -6,20 +6,24 @@
         <title>ToDoApp</title>
     </head>
     <body>
-        <form method="post" action="/add">
-            <p>
-                <input type="text" name="contents" size="50"></textarea>
-                <input type="submit" value="add">
-            </p>
-        </form>
-        <form method="post" action="/rm">
-            {{ range .todo }}
-                <p><input type="checkbox" name="id" value="{{ .ID }}">{{ .Content }}</p>
-            {{ end }}
-            <p><input type="submit" value="remove"></p>
-        </form>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <div class="py-3">
+            <div class="container">
+                <form method="post" action="/add">
+                    <div class="form-group">
+                        <input type="text" name="contents" size="50" placeholder="ToDo">
+                        <input type="submit" value="add" class="btn btn-primary">
+                    </div>
+                </form>
+                <form method="post" action="/rm" class="form-group my-3">
+                    {{ range .todo }}
+                        <p><input type="checkbox" name="id" value="{{ .ID }}">{{ .Content }}</p>
+                    {{ end }}
+                    <input type="submit" value="remove" class="btn btn-danger">
+                </form>
+                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+            </dev>
+        </div>
     </body>
 </html>
